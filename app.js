@@ -79,3 +79,45 @@ Promise.race([fast, slow])
     .then(result => {
         console.log("Winner:", result);
     });
+
+    async function getDataWithAsync() {
+    const user = await getUserData(1);
+    const posts = await getUserPosts(user.id);
+    const comments = await getPostComments(posts[0].id);
+
+    return comments;
+}
+
+// Run it
+getDataWithAsync().then(comments => {
+    console.log("Async/Await comments:", comments);
+});
+
+async function fetchUserData(userId) {
+    try {
+        const user = await getUserData(userId);
+        const posts = await getUserPosts(user.id);
+
+        return { user, posts };
+
+    } catch (error) {
+        console.error("Failed:", error);
+    }
+}
+
+// Test it
+fetchUserData(1).then(data => {
+    console.log("User + Posts:", data);
+});
+
+async function getAllUsers() {
+    const [u1, u2, u3] = await Promise.all([
+        getUserData(1),
+        getUserData(2),
+        getUserData(3)
+    ]);
+
+    console.log("All users (async):", [u1, u2, u3]);
+}
+
+getAllUsers();
