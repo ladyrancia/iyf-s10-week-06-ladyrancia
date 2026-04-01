@@ -93,6 +93,8 @@ getDataWithAsync().then(comments => {
     console.log("Async/Await comments:", comments);
 });
 
+const fetch = require("node-fetch");
+
 async function fetchUserData(userId) {
     try {
         const user = await getUserData(userId);
