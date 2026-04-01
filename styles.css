@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background: #f4f4f4;
+    background: linear-gradient(to right, #ece9e6, #ffffff);
     padding: 20px;
 }
 
@@ -13,6 +13,14 @@ h1 {
     margin-bottom: 20px;
 }
 
+input {
+    padding: 10px;
+    width: 200px;
+    margin-left: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
 button {
     padding: 10px 15px;
     margin: 5px;
@@ -21,10 +29,12 @@ button {
     color: white;
     border-radius: 5px;
     cursor: pointer;
+    transition: 0.3s;
 }
 
 button:hover {
-    background: #333;
+    background: #444;
+    transform: scale(1.05);
 }
 
 #status {
@@ -41,10 +51,27 @@ button:hover {
     background: white;
     padding: 15px;
     margin-bottom: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    animation: fadeIn 0.4s ease-in;
 }
 
-.post h3 {
-    margin: 0 0 10px;
+.post:hover {
+    transform: translateY(-5px);
+}
+
+.delete-btn {
+    background: crimson;
+    margin-top: 10px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
