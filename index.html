@@ -2,23 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Posts App</title>
+    <title>Weather App</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <h1>✨ Posts Dashboard</h1>
+    <div class="container"></div>
+    <h1>🌤 Weather Dashboard</h1>
 
-    <div class="controls">
-        <button onclick="loadPosts()">Load Posts</button>
-        <button onclick="loadMore()">Load More</button>
-        <input type="text" id="search" placeholder="Search posts..." oninput="searchPosts()">
+    <form id="search-form">
+        <input type="text" id="city-input" placeholder="Enter city..." required>
+        <button type="submit">Search</button>
+    </form>
+
+    <p id="loading" style="display:none;">Loading...</p>
+    <p id="error" style="color:red;"></p>
+
+    <div id="weather" style="display:none;">
+        <h2 id="city"></h2>
+        <p id="temp"></p>
+        <p id="desc"></p>
+        <p id="humidity"></p>
+        <p id="wind"></p>
     </div>
 
-    <p id="status"></p>
+</div>
 
-    <div id="posts"></div>
-
-    <script src="script.js"></script>
+</body>
+    <script src="app.js"></script>
 </body>
 </html>

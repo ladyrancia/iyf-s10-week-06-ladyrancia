@@ -1,125 +1,58 @@
-// PROMISE FUNCTIONS
-function getUserData(userId) {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            if (userId > 0) {
-                resolve({ id: userId, name: "John" });
-            } else {
-                reject("Invalid user ID");
-            }
-        }, 1000);
-    });
-}
+const API_KEY = "276115bf621e03acf89657513b269b20";
 
-function getUserPosts(userId) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve([
-                { id: 1, title: "Post 1" },
-                { id: 2, title: "Post 2" }
-            ]);
-        }, 1000);
-    });
-}
+const form = document.getElementById("search-form");
+const input = document.getElementById("city-input");
 
-function getPostComments(postId) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve([
-                { id: 1, text: "Great post!" },
-                { id: 2, text: "Nice one!" }
-            ]);
-        }, 1000);
-    });
-}
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
+    const city = input.value.trim();
+    if (!city) return;
 
-// 🔗 PROMISE CHAINING
-getUserData(1)
-    .then(user => {
-        console.log("User:", user);
-        return getUserPosts(user.id);
-    })
-    .then(posts => {
-        console.log("Posts:", posts);
-        return getPostComments(posts[0].id);
-    })
-    .then(comments => {
-        console.log("Comments:", comments);
-    })
-    .catch(error => {
-        console.error("Error:", error);
-    });
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`;
 
-
-// ⚡ PROMISE.ALL
-const promise1 = getUserData(1);
-const promise2 = getUserData(2);
-const promise3 = getUserData(3);
-
-Promise.all([promise1, promise2, promise3])
-    .then(users => {
-        console.log("All users:", users);
-    })
-    .catch(error => {
-        console.error("One failed:", error);
-    });
-
-
-// 🏁 PROMISE.RACE
-const fast = new Promise(resolve =>
-    setTimeout(() => resolve("Fast!"), 100)
-);
-
-const slow = new Promise(resolve =>
-    setTimeout(() => resolve("Slow!"), 500)
-);
-
-Promise.race([fast, slow])
-    .then(result => {
-        console.log("Winner:", result);
-    });
-
-    async function getDataWithAsync() {
-    const user = await getUserData(1);
-    const posts = await getUserPosts(user.id);
-    const comments = await getPostComments(posts[0].id);
-
-    return comments;
-}
-
-// Run it
-getDataWithAsync().then(comments => {
-    console.log("Async/Await comments:", comments);
-});
-
-const fetch = require("node-fetch");
-
-async function fetchUserData(userId) {
     try {
-        const user = await getUserData(userId);
-        const posts = await getUserPosts(user.id);
+        showLoading();
+        document.getElementById("error").textContent = "";
 
-        return { user, posts };
+        const res = await fetch(url);
 
-    } catch (error) {
-        console.error("Failed:", error);
+        if (!res.ok) throw new Error("City not found");
+
+        const data = await res.json();
+
+        displayWeather(data);
+
+    } catch (err) {
+        document.getElementById("error").textContent = err.message;
+    } finally {
+        hideLoading();
     }
-}
-
-// Test it
-fetchUserData(1).then(data => {
-    console.log("User + Posts:", data);
 });
 
-async function getAllUsers() {
-    const [u1, u2, u3] = await Promise.all([
-        getUserData(1),
-        getUserData(2),
-        getUserData(3)
-    ]);
+function displayWeather(data) {
+    document.getElementById("city").textContent =
+        `${data.name}, ${data.sys.country}`;
 
-    console.log("All users (async):", [u1, u2, u3]);
+    document.getElementById("temp").textContent =
+        `🌡 Temp: ${data.main.temp}°C`;
+
+    document.getElementById("desc").textContent =
+        `🌥 ${data.weather[0].description}`;
+
+    document.getElementById("humidity").textContent =
+        `💧 Humidity: ${data.main.humidity}%`;
+
+    document.getElementById("wind").textContent =
+        `🌬 Wind: ${data.wind.speed} m/s`;
+
+    document.getElementById("weather").style.display = "block";
 }
 
-getAllUsers();
+function showLoading() {
+    document.getElementById("loading").style.display = "block";
+}
+
+function hideLoading() {
+    document.getElementById("loading").style.display = "none";
+}
